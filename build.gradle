@@ -9,8 +9,16 @@ dependencies {
 	groovy 'org.codehaus.groovy:groovy-all:1.7.6'
 }
 
-task exampleOneJar(type: Jar) {
-	from sourceSets.main.classes
+sourceSets {
+	thirdparty {
+		java {
+			srcDir 'src/thirdparty/java'	
+		}
+	}
+}
+
+task exampleOneJar(type: OneJar) {
+	from sourceSets.main.classes + sourceSets.thirdparty.classes
 }
 
 artifacts {
@@ -18,3 +26,7 @@ artifacts {
 }
 
 //assemble.dependsOn exampleOneJar
+
+class OneJar extends Jar {
+
+}
