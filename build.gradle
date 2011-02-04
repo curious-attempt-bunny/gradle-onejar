@@ -17,16 +17,30 @@ sourceSets {
 	}
 }
 
-task exampleOneJar(type: OneJar) {
-	from sourceSets.main.classes + sourceSets.thirdparty.classes
+task exampleOneJar(type: Jar, dependsOn: jar) {
+	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
+	manifest {
+    	attributes  'Created-By':'Gradle OneJar task',
+					'Main-Class':'com.simontuffs.onejar.Boot',
+					'One-Jar-Main-Class': mainClass
+	}
+
+	from sourceSets.thirdparty.classes
+
+	// Gradle hangs if I have both into directives
+	
+	into('lib') {
+		from configurations.runtime	
+	}
+
+/*
+	into('main') {
+		from jar.archivePath
+		rename { 'main.jar' }
+	}
+*/	
 }
 
 artifacts {
   archives exampleOneJar
-}
-
-//assemble.dependsOn exampleOneJar
-
-class OneJar extends Jar {
-
 }
