@@ -18,38 +18,47 @@ sourceSets {
 }
 
 task exampleOneJar(type: OneJar, dependsOn: jar) {
-// TODO	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
+	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
 }
 
 artifacts {
   archives exampleOneJar
 }
 
+apply plugin: 'java'
 class OneJar extends Jar {
-	String mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
+	String mainClass
+	def runtime
+	def jar
 	
 	OneJar() {
-		def sourceSets = project.sourceSets
-		def configurations = project.configurations
-		def jar = project.tasks.jar
+		def oneJarClasses = project.sourceSets.thirdparty.classes
+		jar = project.tasks.jar
+		runtime = project.configurations.runtime
 		
-		configure {
-			appendix = 'onejar'
-			manifest {
-		    	attributes  'Created-By':'Gradle OneJar task',
-							'Main-Class':'com.simontuffs.onejar.Boot',
-							'One-Jar-Main-Class': mainClass
-			}
-		
-			from sourceSets.thirdparty.classes
-		
-			into('lib') {
-				from configurations.runtime	
-			}
-		
-			into('main') {
-				from jar.archivePath
-				rename { 'main.jar' }
+		doFirst {
+			println "SOMETHING HAPPENING!"
+				
+			def jar = project.tasks.jar
+			
+			configure {
+				appendix = 'onejar'
+				manifest {
+			    	attributes  'Created-By':'Gradle OneJar task',
+								'Main-Class':'com.simontuffs.onejar.Boot',
+								'One-Jar-Main-Class': mainClass
+				}
+			
+				from oneJarClasses
+			
+				into('lib') {
+					from runtime	
+				}
+			
+				into('main') {
+					from jar.archivePath
+					rename { 'main.jar' }
+				}
 			}
 		}
 	}
