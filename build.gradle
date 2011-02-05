@@ -17,28 +17,40 @@ sourceSets {
 	}
 }
 
-task exampleOneJar(type: Jar, dependsOn: jar) {
-	appendix = 'onejar'
-
-	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
-	manifest {
-    	attributes  'Created-By':'Gradle OneJar task',
-					'Main-Class':'com.simontuffs.onejar.Boot',
-					'One-Jar-Main-Class': mainClass
-	}
-
-	from sourceSets.thirdparty.classes
-
-	into('lib') {
-		from configurations.runtime	
-	}
-
-	into('main') {
-		from jar.archivePath
-		rename { 'main.jar' }
-	}
+task exampleOneJar(type: OneJar, dependsOn: jar) {
+// TODO	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
 }
 
 artifacts {
   archives exampleOneJar
+}
+
+class OneJar extends Jar {
+	String mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
+	
+	OneJar() {
+		def sourceSets = project.sourceSets
+		def configurations = project.configurations
+		def jar = project.tasks.jar
+		
+		configure {
+			appendix = 'onejar'
+			manifest {
+		    	attributes  'Created-By':'Gradle OneJar task',
+							'Main-Class':'com.simontuffs.onejar.Boot',
+							'One-Jar-Main-Class': mainClass
+			}
+		
+			from sourceSets.thirdparty.classes
+		
+			into('lib') {
+				from configurations.runtime	
+			}
+		
+			into('main') {
+				from jar.archivePath
+				rename { 'main.jar' }
+			}
+		}
+	}
 }
