@@ -1,0 +1,35 @@
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+
+version = '0.1-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	groovy 'org.codehaus.groovy:groovy-all:1.7.6'
+	compile gradleApi()
+}
+
+sourceSets {
+	thirdparty {
+		java {
+			srcDir 'src/thirdparty/java'	
+		}
+	}
+}
+
+task thirdPartyJar(type: Jar) {
+	appendix = 'thirdparty'
+	from sourceSets.thirdparty.classes
+}
+
+jar {
+	into('') {
+		from thirdPartyJar.archivePath
+		rename { 'thirdParty.jar' }
+	}
+}	
+jar.dependsOn thirdPartyJar	
+

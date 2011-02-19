@@ -1,0 +1,25 @@
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+
+buildscript {
+	dependencies {
+		classpath project(':plugin')
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	groovy 'org.codehaus.groovy:groovy-all:1.7.6'
+}
+
+task oneJar(type: OneJar) {
+	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
+}
+
+artifacts {
+	archives oneJar
+}
+

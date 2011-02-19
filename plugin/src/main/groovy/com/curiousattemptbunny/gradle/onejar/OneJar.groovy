@@ -1,52 +1,8 @@
-apply plugin: 'groovy'
-apply plugin: 'eclipse'
+package com.curiousattemptbunny.gradle.onejar
 
-version = '0.1-SNAPSHOT'
-
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	groovy 'org.codehaus.groovy:groovy-all:1.7.6'
-}
-
-sourceSets {
-	example {
-		groovy {
-			srcDir 'src/example/groovy'
-		}
-	}
-}
-
-task exampleJar(type: Jar) {
-	appendix = 'example'
-	from sourceSets.example.classes
-}
-
-task exampleOneJar(type: OneJar) {
-	appendix = 'exampleOneJar'
-	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
-	mainJar = exampleJar
-	runtime = runtime  // optional
-}
-
-artifacts {
-  archives exampleOneJar
-}
-
-// TODO --- the rest will hopefully become a plugin:
-
-apply plugin: 'java'
-
-// TODO this will need to move to become a dependency
-sourceSets {
-	thirdparty {
-		java {
-			srcDir 'src/thirdparty/java'	
-		}
-	}
-}
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.bundling.Jar;
 
 class OneJar extends Jar {
 	@Input
