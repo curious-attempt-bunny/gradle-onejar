@@ -1,9 +1,11 @@
+import com.curiousattemptbunny.gradle.onejar.OneJar
+
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 
 buildscript {
 	dependencies {
-		classpath project(':plugin')
+		classpath files( '../plugin/build/libs/plugin-0.1-SNAPSHOT.jar' )
 	}
 }
 
@@ -23,3 +25,6 @@ artifacts {
 	archives oneJar
 }
 
+task dosomething << {
+	println OneJar.class.getResource("/thirdParty.jar")
+}

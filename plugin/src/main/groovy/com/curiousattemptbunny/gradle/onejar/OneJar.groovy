@@ -1,8 +1,11 @@
 package com.curiousattemptbunny.gradle.onejar
 
-import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.bundling.Jar;
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.bundling.Jar
 
 class OneJar extends Jar {
 	@Input
@@ -28,9 +31,25 @@ class OneJar extends Jar {
 
 		// post-configuration action
 		copyAction.rootSpec.addChild().into('') {
-			from { project.sourceSets.thirdparty.classes }
+			InputStream is = OneJar.class.getResourceAsStream("/thirdParty.jar")
+			ZipInputStream zis = new ZipInputStream(is)
+			ZipEntry entry
+			
+			while ((entry = zis.getNextEntry()) != null) {
+				if (!entry.isDirectory() && entry.name.endsWith(".class")) {
+					File dummy = new File(entry.name)
+					File clazz = File.createTempFile("temp", ".tmp")
+					clazz.deleteOnExit()
+					clazz << zis
+					
+					into (dummy.parent) {
+						from { clazz }
+						rename { dummy.name }
+					}
+				}
+			}
 		}
-
+		
 		// post-configuration action
 		copyAction.rootSpec.addChild().into('main') {
 			from { mainJar.archivePath }
