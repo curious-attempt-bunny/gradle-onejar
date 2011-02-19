@@ -36,30 +36,34 @@ class OneJar extends Jar {
 		jar = project.tasks.jar
 		runtime = project.configurations.runtime
 		
-		doFirst {
-			println "SOMETHING HAPPENING!"
-				
-			def jar = project.tasks.jar
+		def jar = project.tasks.jar
 			
-			configure {
-				appendix = 'onejar'
-				manifest {
+		configure {
+			appendix = 'onejar'
+			manifest {
 			    	attributes  'Created-By':'Gradle OneJar task',
-								'Main-Class':'com.simontuffs.onejar.Boot',
-								'One-Jar-Main-Class': mainClass
-				}
-			
-				from oneJarClasses
-			
-				into('lib') {
-					from runtime	
-				}
-			
-				into('main') {
-					from jar.archivePath
-					rename { 'main.jar' }
-				}
+					    'Main-Class':'com.simontuffs.onejar.Boot'
+			}
+		
+			from oneJarClasses
+		
+			into('lib') {
+				from runtime	
+			}
+		
+			into('main') {
+				from jar.archivePath
+				rename { 'main.jar' }
 			}
 		}
+	}
+
+	public void setMainClass(String mainClass) {
+		this.mainClass = mainClass
+		configure {
+			manifest {
+				attributes 'One-Jar-Main-Class': mainClass
+			}
+		}	
 	}
 }
