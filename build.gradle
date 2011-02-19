@@ -19,6 +19,7 @@ sourceSets {
 
 task exampleOneJar(type: OneJar, dependsOn: jar) {
 	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
+	mainJar = jar
 }
 
 artifacts {
@@ -29,15 +30,16 @@ apply plugin: 'java'
 class OneJar extends Jar {
 	String mainClass
 	def runtime
-	def jar
+	def mainJar
 	
 	OneJar() {
 		def oneJarClasses = project.sourceSets.thirdparty.classes
-		jar = project.tasks.jar
+
+		// default settings		
+		mainJar = project.tasks.jar
 		runtime = project.configurations.runtime
-		
-		def jar = project.tasks.jar
-			
+
+		// more defaults		
 		configure {
 			appendix = 'onejar'
 			manifest {
@@ -50,11 +52,12 @@ class OneJar extends Jar {
 			into('lib') {
 				from runtime	
 			}
-		
-			into('main') {
-				from jar.archivePath
-				rename { 'main.jar' }
-			}
+		}
+
+		// post-configuration actions
+		copyAction.rootSpec.addChild().into('main') {
+			from { mainJar.archivePath }
+			rename { 'main.jar' }
 		}
 	}
 
