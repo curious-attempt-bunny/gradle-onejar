@@ -17,7 +17,7 @@ sourceSets {
 	}
 }
 
-task exampleOneJar(type: OneJar, dependsOn: jar) {
+task exampleOneJar(type: OneJar) {
 	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
 	mainJar = jar
 }
@@ -28,9 +28,12 @@ artifacts {
 
 apply plugin: 'java'
 class OneJar extends Jar {
+	@Input
 	String mainClass
+	// @Input
 	def runtime
-	def mainJar
+	// @Input
+	Jar mainJar
 	
 	OneJar() {
 		def oneJarClasses = project.sourceSets.thirdparty.classes
@@ -68,5 +71,10 @@ class OneJar extends Jar {
 				attributes 'One-Jar-Main-Class': mainClass
 			}
 		}	
+	}
+
+	public void setMainJar(Jar mainJar) {
+		this.mainJar = mainJar
+		this.dependsOn mainJar // TODO this should work for the default settings too
 	}
 }
