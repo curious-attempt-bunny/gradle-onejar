@@ -9,6 +9,21 @@ dependencies {
 	groovy 'org.codehaus.groovy:groovy-all:1.7.6'
 }
 
+task exampleOneJar(type: OneJar) {
+	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
+	mainJar = jar      // optional
+	runtime = runtime  // optional
+}
+
+artifacts {
+  archives exampleOneJar
+}
+
+// TODO --- the rest will hopefully become a plugin:
+
+apply plugin: 'java'
+
+// TODO this will need to move to become a dependency
 sourceSets {
 	thirdparty {
 		java {
@@ -17,27 +32,15 @@ sourceSets {
 	}
 }
 
-task exampleOneJar(type: OneJar) {
-	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
-	mainJar = jar
-}
-
-artifacts {
-  archives exampleOneJar
-}
-
-apply plugin: 'java'
 class OneJar extends Jar {
 	@Input
 	String mainClass
-	// @Input
-	def runtime
-	// @Input
+	// TODO @Input @Optional
+	Configuration runtime
+	// TODO @Input @Optional
 	Jar mainJar
 	
 	OneJar() {
-		def oneJarClasses = project.sourceSets.thirdparty.classes
-
 		// default settings		
 		mainJar = project.tasks.jar
 		runtime = project.configurations.runtime
@@ -49,18 +52,22 @@ class OneJar extends Jar {
 			    	attributes  'Created-By':'Gradle OneJar task',
 					    'Main-Class':'com.simontuffs.onejar.Boot'
 			}
-		
-			from oneJarClasses
-		
-			into('lib') {
-				from runtime	
-			}
 		}
 
-		// post-configuration actions
+		// post-configuration action
+		copyAction.rootSpec.addChild().into('') {
+			from { project.sourceSets.thirdparty.classes }
+		}
+
+		// post-configuration action
 		copyAction.rootSpec.addChild().into('main') {
 			from { mainJar.archivePath }
 			rename { 'main.jar' }
+		}
+
+		// post-configuration action
+		copyAction.rootSpec.addChild().into('lib') {
+			from { runtime }
 		}
 	}
 
@@ -75,6 +82,6 @@ class OneJar extends Jar {
 
 	public void setMainJar(Jar mainJar) {
 		this.mainJar = mainJar
-		this.dependsOn mainJar // TODO this should work for the default settings too
+		this.dependsOn mainJar // TODO this needs to work for the default settings too
 	}
 }
