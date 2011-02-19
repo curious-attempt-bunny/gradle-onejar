@@ -1,6 +1,8 @@
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 
+version = '0.1-SNAPSHOT'
+
 repositories {
 	mavenCentral()
 }
@@ -9,9 +11,23 @@ dependencies {
 	groovy 'org.codehaus.groovy:groovy-all:1.7.6'
 }
 
+sourceSets {
+	example {
+		groovy {
+			srcDir 'src/example/groovy'
+		}
+	}
+}
+
+task exampleJar(type: Jar) {
+	appendix = 'example'
+	from sourceSets.example.classes
+}
+
 task exampleOneJar(type: OneJar) {
+	appendix = 'exampleOneJar'
 	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
-	mainJar = jar      // optional
+	mainJar = exampleJar
 	runtime = runtime  // optional
 }
 
