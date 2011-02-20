@@ -24,7 +24,3 @@ task oneJar(type: OneJar) {
 artifacts {
 	archives oneJar
 }
-
-task dosomething << {
-	println OneJar.class.getResource("/thirdParty.jar")
-}
