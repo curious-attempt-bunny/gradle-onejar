@@ -4,5 +4,5 @@ See the [example/build.gant](curious-attempt-bunny/gradle-onejar/blob/master/exa
 
 # Getting the JAR
 
-For now you need to build the jar yourself of download it from [](http://curious-attempt-bunny.github.com/gradle-onejar-0.1-SNAPSHOT.jar).
+For now you need to build the jar yourself of download it from [http://curious-attempt-bunny.github.com/gradle-onejar-0.1-SNAPSHOT.jar](http://curious-attempt-bunny.github.com/gradle-onejar-0.1-SNAPSHOT.jar).
 
