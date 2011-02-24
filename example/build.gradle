@@ -1,7 +1,6 @@
-import com.curiousattemptbunny.gradle.onejar.OneJar
-
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
+apply plugin: com.curiousattemptbunny.gradle.onejar.OneJarPlugin
 
 buildscript {
 	dependencies {
@@ -20,6 +19,7 @@ dependencies {
 task oneJar(type: OneJar) {
 	mainClass = 'com.curiousattemptbunny.onejar.ExampleMain'
 }
+oneJar.dependsOn jar
 
 artifacts {
 	archives oneJar
