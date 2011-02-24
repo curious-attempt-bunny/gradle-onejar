@@ -1,6 +1,6 @@
 # Usage
 
-See the [example/build.gant](gradle-onejar/blob/master/example/build.gant).
+See the [example/build.gradle](gradle-onejar/blob/master/example/build.gradle).
 
 # Getting the JAR
 
