@@ -1,16 +1,18 @@
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
-apply plugin: com.curiousattemptbunny.gradle.onejar.OneJarPlugin
+apply plugin: 'oneJar'
 
 // http://cloud.github.com/downloads/curious-attempt-bunny/gradle-onejar/gradle-onejar-0.1-SNAPSHOT.jar
 buildscript {
     repositories {
-        add(new org.apache.ivy.plugins.resolver.URLResolver()) {
-            name = 'GitHub'
-            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
-        }
+		add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+			name = 'GitHub'
+			addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+		}
     }
+}
     
+buildscript {
 	dependencies {
 		classpath 'curious-attempt-bunny:gradle-onejar:0.1-SNAPSHOT'
 	}
